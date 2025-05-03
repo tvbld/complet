@@ -1,0 +1,485 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Completar Frases</title>
+    <style>
+        :root {
+            --primary-color: #6b72e6;
+            --secondary-color: #8f94fb;
+            --text-color: #f0f0f0;
+            --bg-color: #121212;
+            --card-bg: #1e1e1e;
+            --btn-color: #6b72e6;
+            --btn-text: #ffffff;
+            --border-color: #333333;
+            --error-color: #ff6e6e;
+            --success-color: #66bb6a;
+        }
+
+        .light-mode {
+            --primary-color: #4e54c8;
+            --secondary-color: #8f94fb;
+            --text-color: #333;
+            --bg-color: #f9f9f9;
+            --card-bg: #ffffff;
+            --btn-color: #4e54c8;
+            --btn-text: #ffffff;
+            --border-color: #e0e0e0;
+            --error-color: #ff5252;
+            --success-color: #4caf50;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: var(--card-bg);
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            padding: 20px;
+            position: relative;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 10px;
+        }
+
+        h1 {
+            color: var(--primary-color);
+            font-size: 24px;
+            text-align: center;
+            flex-grow: 1;
+        }
+
+        button {
+            background-color: var(--btn-color);
+            color: var(--btn-text);
+            border: none;
+            border-radius: 5px;
+            padding: 10px 15px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+
+        button:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .theme-toggle {
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: var(--text-color);
+            cursor: pointer;
+            padding: 0 10px;
+        }
+
+        .file-section, .line-section, .game-section {
+            margin-bottom: 20px;
+            padding: 15px;
+            border-radius: 10px;
+            background-color: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+        }
+
+        .light-mode .file-section, .light-mode .line-section, .light-mode .game-section {
+            background-color: rgba(0, 0, 0, 0.03);
+        }
+
+        .status {
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+        .line-input {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            justify-content: center;
+        }
+
+        input[type="number"] {
+            width: 80px;
+            padding: 8px;
+            border-radius: 5px;
+            border: 1px solid var(--border-color);
+            background-color: var(--card-bg);
+            color: var(--text-color);
+        }
+
+        .phrase-display {
+            margin: 15px 0;
+            padding: 15px;
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 8px;
+            font-size: 18px;
+            text-align: center;
+        }
+
+        .word-boxes {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            justify-content: center;
+            margin: 20px 0;
+        }
+
+        .word {
+            display: flex;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+
+        .letter-box {
+            width: 30px;
+            height: 40px;
+            border: 2px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 18px;
+            background-color: var(--card-bg);
+            color: var(--text-color);
+            border-radius: 5px;
+        }
+
+        .buttons-container {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .letter-button {
+            width: 50px;
+            height: 50px;
+            font-size: 24px;
+            border-radius: 50%;
+        }
+
+        .error {
+            background-color: var(--error-color) !important;
+        }
+
+        .message {
+            text-align: center;
+            font-weight: bold;
+            min-height: 24px;
+            margin-top: 15px;
+        }
+
+        .error-message {
+            color: var(--error-color);
+        }
+
+        .success-message {
+            color: var(--success-color);
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 15px;
+            }
+
+            h1 {
+                font-size: 20px;
+            }
+
+            .letter-box {
+                width: 25px;
+                height: 35px;
+                font-size: 16px;
+            }
+
+            .letter-button {
+                width: 45px;
+                height: 45px;
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Completar Frases</h1>
+            <button class="theme-toggle" onclick="toggleTheme()">☀️</button>
+        </header>
+
+        <div class="file-section">
+            <button id="fileButton">Seleccionar Archivo</button>
+            <input type="file" id="fileInput" accept=".txt" style="display: none;">
+            <div id="fileStatus" class="status"></div>
+        </div>
+
+        <div class="line-section" style="display: none;">
+            <div class="line-input">
+                <label for="lineNumber">Número de línea:</label>
+                <input type="number" id="lineNumber" min="1" value="1">
+                <button id="showButton">Mostrar</button>
+            </div>
+            <div id="totalLines" class="status"></div>
+        </div>
+
+        <div class="game-section" style="display: none;">
+            <div id="phraseRight" class="phrase-display"></div>
+            <div id="wordBoxes" class="word-boxes"></div>
+            <div id="letterButtons" class="buttons-container"></div>
+            <div id="message" class="message"></div>
+        </div>
+    </div>
+
+    <script>
+        // Variables globales
+        let fileContent = [];
+        let currentLine = 1;
+        let totalLines = 0;
+        let currentPhrase = '';
+        let currentWords = [];
+        let currentLetterIndex = 0;
+        let currentWordIndex = 0;
+        let letterPositions = [];
+
+        // Elementos DOM
+        const fileButton = document.getElementById('fileButton');
+        const fileInput = document.getElementById('fileInput');
+        const fileStatus = document.getElementById('fileStatus');
+        const lineSection = document.querySelector('.line-section');
+        const lineNumberInput = document.getElementById('lineNumber');
+        const showButton = document.getElementById('showButton');
+        const totalLinesDisplay = document.getElementById('totalLines');
+        const gameSection = document.querySelector('.game-section');
+        const phraseRightDisplay = document.getElementById('phraseRight');
+        const wordBoxesContainer = document.getElementById('wordBoxes');
+        const letterButtonsContainer = document.getElementById('letterButtons');
+        const messageDisplay = document.getElementById('message');
+
+        // Event Listeners
+        fileButton.addEventListener('click', () => fileInput.click());
+        fileInput.addEventListener('change', handleFileSelect);
+        showButton.addEventListener('click', showLine);
+
+        // Funciones
+        function toggleTheme() {
+            document.body.classList.toggle('light-mode');
+            const themeButton = document.querySelector('.theme-toggle');
+            if (document.body.classList.contains('light-mode')) {
+                themeButton.textContent = '🌙';
+            } else {
+                themeButton.textContent = '☀️';
+            }
+        }
+
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const content = e.target.result;
+                fileContent = content.split('\n').filter(line => line.trim() !== '');
+                totalLines = fileContent.length;
+                
+                fileStatus.textContent = `Archivo cargado: ${file.name}`;
+                totalLinesDisplay.textContent = `Total de líneas: ${totalLines}`;
+                
+                lineSection.style.display = 'block';
+                lineNumberInput.max = totalLines;
+                currentLine = 1;
+                lineNumberInput.value = 1;
+            };
+            reader.readAsText(file);
+        }
+
+        function showLine() {
+            currentLine = parseInt(lineNumberInput.value);
+            
+            if (isNaN(currentLine) || currentLine < 1 || currentLine > totalLines) {
+                alert(`Por favor, ingrese un número de línea válido entre 1 y ${totalLines}`);
+                return;
+            }
+            
+            const selectedLine = fileContent[currentLine - 1];
+            const [leftPhrase, rightPhrase] = splitLine(selectedLine);
+            
+            if (!leftPhrase || !rightPhrase) {
+                alert('El formato de la línea no es correcto. Debe contener una frase a la izquierda y otra a la derecha separadas por espacio o tabulación.');
+                return;
+            }
+            
+            currentPhrase = leftPhrase;
+            phraseRightDisplay.textContent = rightPhrase;
+            
+            prepareWordBoxes(currentPhrase);
+            gameSection.style.display = 'block';
+            
+            // Iniciar juego
+            currentLetterIndex = 0;
+            currentWordIndex = 0;
+            setNextLetterButtons();
+        }
+
+        function splitLine(line) {
+            // Intentar dividir por tab o por espacio
+            let parts = line.split('\t');
+            if (parts.length < 2) {
+                // Buscar el último espacio que divide las frases
+                const lastSpaceIndex = line.lastIndexOf(' ');
+                if (lastSpaceIndex !== -1) {
+                    return [line.substring(0, lastSpaceIndex), line.substring(lastSpaceIndex + 1)];
+                }
+                return [null, null];
+            }
+            return [parts[0], parts[1]];
+        }
+
+        function prepareWordBoxes(phrase) {
+            wordBoxesContainer.innerHTML = '';
+            letterPositions = [];
+            currentWords = [];
+            
+            const words = phrase.split(' ');
+            
+            words.forEach(word => {
+                const wordDiv = document.createElement('div');
+                wordDiv.className = 'word';
+                
+                const wordChars = Array.from(word);
+                const wordLetters = [];
+                
+                wordChars.forEach(char => {
+                    const letterBox = document.createElement('div');
+                    letterBox.className = 'letter-box';
+                    
+                    // Si es letra, dejar vacío; si no, mostrar el carácter
+                    if (!isLetter(char)) {
+                        letterBox.textContent = char;
+                    } else {
+                        wordLetters.push(char.toLowerCase());
+                        letterPositions.push({
+                            box: letterBox,
+                            letter: char.toLowerCase()
+                        });
+                    }
+                    
+                    wordDiv.appendChild(letterBox);
+                });
+                
+                currentWords.push(wordLetters);
+                wordBoxesContainer.appendChild(wordDiv);
+            });
+        }
+
+        function isLetter(char) {
+            return /[a-zA-Z]/.test(char);
+        }
+
+        function setNextLetterButtons() {
+            // Si hemos terminado todas las letras
+            if (currentLetterIndex >= letterPositions.length) {
+                letterButtonsContainer.innerHTML = '';
+                messageDisplay.textContent = '¡Muy bien!';
+                messageDisplay.className = 'message success-message';
+                
+                // Sugerir la siguiente línea
+                if (currentLine < totalLines) {
+                    lineNumberInput.value = currentLine + 1;
+                }
+                return;
+            }
+            
+            const correctLetter = letterPositions[currentLetterIndex].letter;
+            
+            // Generar 3 letras aleatorias diferentes a la correcta
+            const alphabet = 'abcdefghijklmnopqrstuvwxyz';
+            const lettersArray = [correctLetter];
+            
+            while (lettersArray.length < 4) {
+                const randomLetter = alphabet[Math.floor(Math.random() * alphabet.length)];
+                if (!lettersArray.includes(randomLetter)) {
+                    lettersArray.push(randomLetter);
+                }
+            }
+            
+            // Mezclar el array
+            shuffleArray(lettersArray);
+            
+            // Crear botones
+            letterButtonsContainer.innerHTML = '';
+            lettersArray.forEach(letter => {
+                const button = document.createElement('button');
+                button.className = 'letter-button';
+                button.textContent = letter;
+                button.addEventListener('click', () => checkLetter(button, letter));
+                letterButtonsContainer.appendChild(button);
+            });
+            
+            messageDisplay.textContent = '';
+            messageDisplay.className = 'message';
+        }
+
+        function checkLetter(button, letter) {
+            const correctLetter = letterPositions[currentLetterIndex].letter;
+            
+            if (letter === correctLetter) {
+                // Correcto
+                letterPositions[currentLetterIndex].box.textContent = correctLetter;
+                currentLetterIndex++;
+                setNextLetterButtons();
+            } else {
+                // Incorrecto
+                button.classList.add('error');
+                messageDisplay.textContent = '¡Te equivocaste!';
+                messageDisplay.className = 'message error-message';
+                
+                // Quitar la clase de error después de un tiempo
+                setTimeout(() => {
+                    button.classList.remove('error');
+                }, 1000);
+            }
+        }
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+        
+        // Aplicar tema oscuro por defecto al cargar
+        document.addEventListener('DOMContentLoaded', function() {
+            // Tema oscuro ya es el predeterminado por las variables CSS
+        });
+    </script>
+</body>
+</html>
